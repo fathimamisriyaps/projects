@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management System</title>
+
+
+    <!-- =========================
+         CSS
+    ========================== -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f5f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        /* Header */
+
+        header {
+            background: #1f4e79;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 16px;
+        }
+
+
+        /* Cards */
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 10px;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #1f4e79;
+            margin-bottom: 20px;
+        }
+
+
+        /* Labels */
+
+        label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+
+        /* Inputs */
+
+        input {
+            width: 100%;
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 5px;
+
+            font-size: 15px;
+        }
+
+
+        /* Buttons */
+
+        button {
+            padding: 12px 20px;
+
+            margin-top: 18px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            background: #1f4e79;
+
+            color: white;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #163a5c;
+        }
+
+
+        /* Button container */
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        /* Search */
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .search-box button {
+            margin-top: 0;
+        }
+
+
+        /* Table */
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+
+            border: 1px solid #ddd;
+
+            text-align: center;
+        }
+
+        th {
+            background: #1f4e79;
+            color: white;
+        }
+
+
+        /* Delete button */
+
+        .delete-btn {
+            background: #c0392b;
+        }
+
+        .delete-btn:hover {
+            background: #922b21;
+        }
+
+
+        /* Exit button */
+
+        .exit-btn {
+            background: #555;
+        }
+
+        .exit-btn:hover {
+            background: #333;
+        }
+
+
+        /* Message */
+
+        #searchResult {
+            margin-top: 20px;
+
+            font-weight: bold;
+        }
+
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #777;
+        }
+
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header>
+
+        <h1>
+            Student Management System
+        </h1>
+
+        <p>
+            Manage Student Records Easily
+        </p>
+
+    </header>
+
+
+
+    <!-- =========================
+         ADD STUDENT
+    ========================== -->
+
+    <div class="card">
+
+        <h2>
+            Add Student
+        </h2>
+
+
+        <label>
+            Student ID
+        </label>
+
+        <input
+            type="number"
+            id="studentId"
+            placeholder="Enter student ID"
+        >
+
+
+        <label>
+            Student Name
+        </label>
+
+        <input
+            type="text"
+            id="studentName"
+            placeholder="Enter student name"
+        >
+
+
+        <label>
+            Marks
+        </label>
+
+        <input
+            type="number"
+            id="studentMarks"
+            placeholder="Enter marks (0 - 100)"
+        >
+
+
+        <button onclick="addStudent()">
+
+            Add Student
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =========================
+         STUDENT RECORDS
+    ========================== -->
+
+    <div class="card">
+
+        <h2>
+            Student Records
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Marks
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="studentTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- =========================
+         SEARCH STUDENT
+    ========================== -->
+
+    <div class="card">
+
+        <h2>
+            Search Student
+        </h2>
+
+
+        <div class="search-box">
+
+            <input
+                type="number"
+                id="searchId"
+                placeholder="Enter Student ID"
+            >
+
+
+            <button onclick="searchStudent()">
+
+                Search
+
+            </button>
+
+        </div>
+
+
+        <p id="searchResult"></p>
+
+    </div>
+
+
+
+    <!-- =========================
+         DELETE STUDENT
+    ========================== -->
+
+    <div class="card">
+
+        <h2>
+            Delete Student
+        </h2>
+
+
+        <div class="search-box">
+
+            <input
+                type="number"
+                id="deleteId"
+                placeholder="Enter Student ID"
+            >
+
+
+            <button
+                class="delete-btn"
+                onclick="deleteStudent()">
+
+                Delete Student
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         EXIT
+    ========================== -->
+
+    <div class="card">
+
+        <h2>
+            Exit
+        </h2>
+
+
+        <button
+            class="exit-btn"
+            onclick="exitSystem()">
+
+            Exit System
+
+        </button>
+
+    </div>
+
+
+    <footer>
+
+        Student Management System
+
+    </footer>
+
+
+</div>
+
+
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
+
+<script>
+
+    // Array to store students
+    let students = [];
+
+
+    // =========================
+    // ADD STUDENT
+    // =========================
+
+    function addStudent()
+    {
+        let id =
+            document.getElementById("studentId").value;
+
+        let name =
+            document.getElementById("studentName").value;
+
+        let marks =
+            document.getElementById("studentMarks").value;
+
+
+        // Check empty fields
+
+        if (
+            id === "" ||
+            name === "" ||
+            marks === ""
+        )
+        {
+            alert(
+                "Please enter all student details."
+            );
+
+            return;
+        }
+
+
+        // Validate marks
+
+        if (marks < 0 || marks > 100)
+        {
+            alert(
+                "Marks must be between 0 and 100."
+            );
+
+            return;
+        }
+
+
+        // Check duplicate ID
+
+        let existingStudent =
+            students.find(
+                function(student)
+                {
+                    return student.id == id;
+                }
+            );
+
+
+        if (existingStudent)
+        {
+            alert(
+                "Student ID already exists."
+            );
+
+            return;
+        }
+
+
+        // Add student
+
+        students.push(
+            {
+                id: id,
+                name: name,
+                marks: marks
+            }
+        );
+
+
+        // Display students
+
+        displayStudents();
+
+
+        // Clear inputs
+
+        document.getElementById(
+            "studentId"
+        ).value = "";
+
+        document.getElementById(
+            "studentName"
+        ).value = "";
+
+        document.getElementById(
+            "studentMarks"
+        ).value = "";
+
+
+        alert(
+            "Student added successfully!"
+        );
+    }
+
+
+
+    // =========================
+    // DISPLAY STUDENTS
+    // =========================
+
+    function displayStudents()
+    {
+        let table =
+            document.getElementById(
+                "studentTable"
+            );
+
+
+        table.innerHTML = "";
+
+
+        if (students.length === 0)
+        {
+            table.innerHTML =
+                `
+                <tr>
+                    <td colspan="4">
+                        No student records available.
+                    </td>
+                </tr>
+                `;
+
+            return;
+        }
+
+
+        for (
+            let i = 0;
+            i < students.length;
+            i++
+        )
+        {
+            table.innerHTML +=
+                `
+                <tr>
+
+                    <td>
+                        ${students[i].id}
+                    </td>
+
+                    <td>
+                        ${students[i].name}
+                    </td>
+
+                    <td>
+                        ${students[i].marks}
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteStudentById(${students[i].id})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+                `;
+        }
+    }
+
+
+
+    // =========================
+    // SEARCH STUDENT
+    // =========================
+
+    function searchStudent()
+    {
+        let id =
+            document.getElementById(
+                "searchId"
+            ).value;
+
+
+        if (id === "")
+        {
+            alert(
+                "Please enter Student ID."
+            );
+
+            return;
+        }
+
+
+        let student =
+            students.find(
+                function(s)
+                {
+                    return s.id == id;
+                }
+            );
+
+
+        let result =
+            document.getElementById(
+                "searchResult"
+            );
+
+
+        if (student)
+        {
+            result.innerHTML =
+                `
+                Student Found!<br><br>
+
+                ID: ${student.id}<br>
+
+                Name: ${student.name}<br>
+
+                Marks: ${student.marks}
+                `;
+        }
+        else
+        {
+            result.innerHTML =
+                "Student not found.";
+        }
+    }
+
+
+
+    // =========================
+    // DELETE STUDENT
+    // =========================
+
+    function deleteStudent()
+    {
+        let id =
+            document.getElementById(
+                "deleteId"
+            ).value;
+
+
+        if (id === "")
+        {
+            alert(
+                "Please enter Student ID."
+            );
+
+            return;
+        }
+
+
+        deleteStudentById(id);
+
+
+        document.getElementById(
+            "deleteId"
+        ).value = "";
+    }
+
+
+
+    // =========================
+    // DELETE BY ID
+    // =========================
+
+    function deleteStudentById(id)
+    {
+        let index =
+            students.findIndex(
+                function(student)
+                {
+                    return student.id == id;
+                }
+            );
+
+
+        if (index === -1)
+        {
+            alert(
+                "Student not found."
+            );
+
+            return;
+        }
+
+
+        let studentName =
+            students[index].name;
+
+
+        let confirmation =
+            confirm(
+                "Delete " +
+                studentName +
+                "?"
+            );
+
+
+        if (!confirmation)
+        {
+            return;
+        }
+
+
+        students.splice(index, 1);
+
+
+        displayStudents();
+
+
+        alert(
+            "Student deleted successfully!"
+        );
+    }
+
+
+
+    // =========================
+    // EXIT
+    // =========================
+
+    function exitSystem()
+    {
+        let confirmation =
+            confirm(
+                "Are you sure you want to exit?"
+            );
+
+
+        if (confirmation)
+        {
+            window.close();
+
+
+            // Some browsers don't allow
+            // JavaScript to close a tab
+            // that was not opened by JavaScript.
+
+            document.body.innerHTML =
+                `
+                <div style="
+                    text-align:center;
+                    margin-top:100px;
+                    font-family:Arial;
+                ">
+
+                    <h1>
+                        Student Management System
+                    </h1>
+
+                    <p>
+                        Thank you for using the system!
+                    </p>
+
+                    <p>
+                        You can now close this tab.
+                    </p>
+
+                </div>
+                `;
+        }
+    }
+
+
+    // Display records when page loads
+
+    displayStudents();
+
+</script>
+
+
+</body>
+
+</html>
